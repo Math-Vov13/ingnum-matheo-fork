@@ -28,10 +28,10 @@ C'est que votre Image est bien lancée !
 ## Publier l'image sur Docker
 Créer le tag
 ```sh
-podman tag evaldocker1 docker.io/mathdocs/tpdocker1:v1
+podman tag evaldocker1 docker.io/mathdocks/tpdocker1:v1
 ```
 
 Publier sur Docker.io
 ```sh
-podman push docker.io/mathdocs/tpdocker1:v1
+podman push docker.io/mathdocks/tpdocker1:v1
 ```
