@@ -11,6 +11,8 @@ services:
     networks:
       - microservices-network
     restart: unless-stopped
+    depends_on:
+      - rental-mysql
 
   rental-service:
     build:
@@ -27,8 +29,36 @@ services:
       - microservices-network
     depends_on:
       - customer-service
+      - rental-mysql
+    restart: unless-stopped
+
+  rental-mysql:
+    image: mysql:8.0
+    container_name: rental-mysql
+    environment:
+      MYSQL_DATABASE: rentaldb
+      MYSQL_USER: rental_user
+      MYSQL_PASSWORD: rental_password
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - rental-mysql-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     restart: unless-stopped
 
 networks:
   microservices-network:
     driver: bridge
+
+volumes:
+  rental-mysql-data:
+    driver: local
